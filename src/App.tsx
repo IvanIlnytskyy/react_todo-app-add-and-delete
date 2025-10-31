@@ -27,6 +27,8 @@ export const App: React.FC = () => {
   const [filter, setFilter] = useState<Filter>(Filter.All);
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [addFailed, setAddFailed] = useState(false);
+  const [deletingTodoId, setDeletingTodoId] = useState<number | null>(null);
 
   useEffect(() => {
     if (errorMessage) {
@@ -77,20 +79,33 @@ export const App: React.FC = () => {
     setTempTodo(newTodo);
     setTempTodoId(id);
     setIsLoading(true);
+    setAddFailed(false);
 
     addTodo(trimmed)
       .then(createdTodo => {
         setTodos(prev => [...prev, createdTodo]);
         setTitle('');
       })
-      .catch(() => setErrorMessage(ErrorMessage.Add))
+      .catch(() => {
+        setErrorMessage(ErrorMessage.Add);
+        setAddFailed(true);
+      })
       .finally(() => {
-        setTimeout(() => setTempTodo(null), 700);
+        setIsLoading(false);
+        setTimeout(() => {
+          setTempTodo(null);
+          if (addFailed) {
+            inputRef.current?.focus();
+            setAddFailed(false);
+          } else {
+            inputRef.current?.focus();
+          }
+        }, 700);
       });
   };
 
   const handleDelete = (todoId: number) => {
-    setIsLoading(true);
+    setDeletingTodoId(todoId);
     deleteTodo(todoId)
       .then(() => setTodos(prev => prev.filter(t => t.id !== todoId)))
       .catch(() => setErrorMessage(ErrorMessage.Delete))
@@ -105,13 +120,17 @@ export const App: React.FC = () => {
     }
 
     Promise.allSettled(completed.map(t => deleteTodo(t.id))).then(results => {
-      const hasError = results.some(r => r.status === 'rejected');
+      const successfulIds = results
+        .map((result, index) =>
+          result.status === 'fulfilled' ? completed[index].id : null,
+        )
+        .filter((id): id is number => id !== null);
 
-      if (hasError) {
+      setTodos(prev => prev.filter(t => !successfulIds.includes(t.id)));
+
+      if (results.some(r => r.status === 'rejected')) {
         setErrorMessage(ErrorMessage.Delete);
       }
-
-      setTodos(prev => prev.filter(t => !t.completed));
     });
   };
 
@@ -189,6 +208,13 @@ export const App: React.FC = () => {
                   {todo.title}
                 </span>
 
+                {deletingTodoId === todo.id && (
+                  <div data-cy="TodoLoader" className="modal overlay is-active">
+                    <div className="modal-background has-background-white-ter" />
+                    <div className="loader" />
+                  </div>
+                )}
+
                 <button
                   type="button"
                   className="todo__remove"
@@ -198,6 +224,10 @@ export const App: React.FC = () => {
                 >
                   ×
                 </button>
+                <div data-cy="TodoLoader" className="modal overlay">
+                  <div className="modal-background has-background-white-ter" />
+                  <div className="loader" />
+                </div>
               </div>
             ))}
 
