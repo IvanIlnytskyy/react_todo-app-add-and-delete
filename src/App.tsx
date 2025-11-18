@@ -56,6 +56,7 @@ export const App: React.FC = () => {
       .then(newTodo => {
         setTodos(prev => [...prev, newTodo]);
         setTitle('');
+        setTempTodo(null);
       })
       .catch(() => setErrorMessage(ErrorMessage.Add))
       .finally(() => {

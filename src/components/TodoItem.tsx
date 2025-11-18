@@ -16,12 +16,9 @@ export const TodoItem: React.FC<Props> = ({
   todo,
   onDelete,
   isLoading,
-  deletingTodoId,
   onToggle,
   isTemp = false,
 }) => {
-  const isDeleting = isTemp || deletingTodoId === todo.id;
-
   return (
     <div
       data-cy="Todo"
@@ -57,7 +54,7 @@ export const TodoItem: React.FC<Props> = ({
       )}
       <div
         data-cy="TodoLoader"
-        className={classNames('modal', 'overlay', { 'is-active': isDeleting })}
+        className={classNames('modal', 'overlay', { 'is-active': isTemp })}
       >
         <div className="modal-background has-background-white-ter" />
         <div className="loader" />
