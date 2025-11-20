@@ -30,7 +30,7 @@ export const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
-  const [tempTodoId, setTempTodoId] = useState<number | null>(null);
+  const [deletingTodoId, setDeletingTodoId] = useState<number | null>(null);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -49,7 +49,6 @@ export const App: React.FC = () => {
     };
 
     setTempTodo(fakeTodo);
-    setTempTodoId(id);
     setIsLoading(true);
 
     addTodo(trimmed)
@@ -60,7 +59,7 @@ export const App: React.FC = () => {
       })
       .catch(() => setErrorMessage(ErrorMessage.Add))
       .finally(() => {
-        setTimeout(() => setTempTodo(null), 500);
+        setTempTodo(null);
         setIsLoading(false);
       });
   };
@@ -93,11 +92,21 @@ export const App: React.FC = () => {
     inputRef.current?.focus();
   }, [todos]);
 
+  useEffect(() => {
+    if (errorMessage === ErrorMessage.Add) {
+      inputRef.current?.focus();
+    }
+  }, [errorMessage]);
+
   const handleDelete = (todoId: number) => {
+    setDeletingTodoId(todoId);
     deleteTodo(todoId)
       .then(() => setTodos(prev => prev.filter(t => t.id !== todoId)))
       .catch(() => setErrorMessage(ErrorMessage.Delete))
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setDeletingTodoId(null);
+        setIsLoading(false);
+      });
   };
 
   const handleClearCompleted = () => {
@@ -176,7 +185,7 @@ export const App: React.FC = () => {
           tempTodo={tempTodo}
           onToggle={handleToggle}
           onUpdate={handleUpdate}
-          tempTodoId={tempTodoId}
+          deletingTodoId={deletingTodoId}
         />
 
         {todos.length > 0 && (
