@@ -30,7 +30,7 @@ export const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
-  const [deletingTodoId, setDeletingTodoId] = useState<number | null>(null);
+  const [deletingTodoIds, setDeletingTodoIds] = useState<number[]>([]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -99,12 +99,12 @@ export const App: React.FC = () => {
   }, [errorMessage]);
 
   const handleDelete = (todoId: number) => {
-    setDeletingTodoId(todoId);
+    setDeletingTodoIds(prev => [...prev, todoId]);
     deleteTodo(todoId)
       .then(() => setTodos(prev => prev.filter(t => t.id !== todoId)))
       .catch(() => setErrorMessage(ErrorMessage.Delete))
       .finally(() => {
-        setDeletingTodoId(null);
+        setDeletingTodoIds(prev => prev.filter(id => id !== todoId));
         setIsLoading(false);
       });
   };
@@ -185,7 +185,7 @@ export const App: React.FC = () => {
           tempTodo={tempTodo}
           onToggle={handleToggle}
           onUpdate={handleUpdate}
-          deletingTodoId={deletingTodoId}
+          deletingTodoIds={deletingTodoIds}
         />
 
         {todos.length > 0 && (

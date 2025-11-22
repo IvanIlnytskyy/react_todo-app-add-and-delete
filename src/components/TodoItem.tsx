@@ -9,7 +9,7 @@ type Props = {
   onToggle: (id: number) => void;
   onUpdate: (id: number, title: string) => void;
   isTemp?: boolean;
-  deletingTodoId: number | null;
+  isDeleting: boolean;
 };
 
 export const TodoItem: React.FC<Props> = ({
@@ -18,7 +18,7 @@ export const TodoItem: React.FC<Props> = ({
   isLoading,
   onToggle,
   isTemp = false,
-  deletingTodoId,
+  isDeleting,
 }) => {
   return (
     <div
@@ -56,7 +56,7 @@ export const TodoItem: React.FC<Props> = ({
       <div
         data-cy="TodoLoader"
         className={classNames('modal', 'overlay', {
-          'is-active': isTemp || deletingTodoId === todo.id,
+          'is-active': isTemp || isDeleting,
         })}
       >
         <div className="modal-background has-background-white-ter" />
