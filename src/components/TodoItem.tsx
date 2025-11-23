@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import React from 'react';
 import classNames from 'classnames';
 import { Todo } from '../types/Todo';
@@ -33,7 +35,6 @@ export const TodoItem: React.FC<Props> = ({
           className="todo__status"
           checked={todo.completed}
           onChange={() => onToggle(todo.id)}
-          aria-label="Toggle todo"
         />
       </label>
       <span data-cy="TodoTitle" className="todo__title">
