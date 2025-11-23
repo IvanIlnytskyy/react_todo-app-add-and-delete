@@ -196,12 +196,11 @@ export const App: React.FC = () => {
             onClearCompleted={handleClearCompleted}
           />
         )}
-
-        <ErrorNotification
-          message={errorMessage}
-          onClose={() => setErrorMessage('')}
-        />
       </div>
+      <ErrorNotification
+        message={errorMessage}
+        onClose={() => setErrorMessage('')}
+      />
     </div>
   );
 };
