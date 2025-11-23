@@ -21,45 +21,43 @@ export const TodoItem: React.FC<Props> = ({
   isDeleting,
 }) => {
   return (
-    <li data-cy="Todo" className={classNames({ completed: todo.completed })}>
-      <div className={classNames('todo', { completed: todo.completed })}>
-        <input
-          id={`todo-${todo.id}`}
-          data-cy="TodoStatus"
-          type="checkbox"
-          className="todo__status"
-          checked={todo.completed}
-          disabled={isTemp}
-          onChange={() => onToggle(todo.id)}
-          readOnly
-        />
-        <label className="todo__status-label" htmlFor={`todo-${todo.id}`}>
-          <span className="visually-hidden">Toggle todo</span>
-        </label>
-        <span data-cy="TodoTitle" className="todo__title">
-          {todo.title}
-        </span>
-        {!isTemp && (
-          <button
-            type="button"
-            className="todo__remove"
-            data-cy="TodoDelete"
-            disabled={isLoading}
-            onClick={() => onDelete(todo.id)}
-          >
-            ×
-          </button>
-        )}
-        <div
-          data-cy="TodoLoader"
-          className={classNames('modal', 'overlay', {
-            'is-active': isTemp || isDeleting,
-          })}
+    <div className={classNames('todo', { completed: todo.completed })}>
+      <input
+        id={`todo-${todo.id}`}
+        data-cy="TodoStatus"
+        type="checkbox"
+        className="todo__status"
+        checked={todo.completed}
+        disabled={isTemp}
+        onChange={() => onToggle(todo.id)}
+        readOnly
+      />
+      <label className="todo__status-label" htmlFor={`todo-${todo.id}`}>
+        <span className="visually-hidden">Toggle todo</span>
+      </label>
+      <span data-cy="TodoTitle" className="todo__title">
+        {todo.title}
+      </span>
+      {!isTemp && (
+        <button
+          type="button"
+          className="todo__remove"
+          data-cy="TodoDelete"
+          disabled={isLoading}
+          onClick={() => onDelete(todo.id)}
         >
-          <div className="modal-background has-background-white-ter" />
-          <div className="loader" />
-        </div>
+          ×
+        </button>
+      )}
+      <div
+        data-cy="TodoLoader"
+        className={classNames('modal', 'overlay', {
+          'is-active': isTemp || isDeleting,
+        })}
+      >
+        <div className="modal-background has-background-white-ter" />
+        <div className="loader" />
       </div>
-    </li>
+    </div>
   );
 };

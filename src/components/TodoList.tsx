@@ -22,30 +22,28 @@ export const TodoList: React.FC<Props> = ({
   deletingTodoIds,
 }) => (
   <section className="todoapp__main" data-cy="TodoList">
-    <ul>
-      {todos.map(todo => (
-        <TodoItem
-          key={todo.id}
-          todo={todo}
-          onDelete={onDelete}
-          onToggle={onToggle}
-          onUpdate={onUpdate}
-          isLoading={isLoading}
-          isDeleting={deletingTodoIds.includes(todo.id)}
-        />
-      ))}
-      {tempTodo && (
-        <TodoItem
-          key="temp"
-          todo={tempTodo}
-          onDelete={() => {}}
-          onToggle={() => {}}
-          onUpdate={() => {}}
-          isLoading={true}
-          isTemp={true}
-          isDeleting={false}
-        />
-      )}
-    </ul>
+    {todos.map(todo => (
+      <TodoItem
+        key={todo.id}
+        todo={todo}
+        onDelete={onDelete}
+        onToggle={onToggle}
+        onUpdate={onUpdate}
+        isLoading={isLoading}
+        isDeleting={deletingTodoIds.includes(todo.id)}
+      />
+    ))}
+    {tempTodo && (
+      <TodoItem
+        key="temp"
+        todo={tempTodo}
+        onDelete={() => {}}
+        onToggle={() => {}}
+        onUpdate={() => {}}
+        isLoading={true}
+        isTemp={true}
+        isDeleting={false}
+      />
+    )}
   </section>
 );
