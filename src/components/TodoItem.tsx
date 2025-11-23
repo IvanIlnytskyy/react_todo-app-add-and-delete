@@ -21,19 +21,20 @@ export const TodoItem: React.FC<Props> = ({
   isDeleting,
 }) => {
   return (
-    <div className={classNames('todo', { completed: todo.completed })}>
-      <input
-        id={`todo-${todo.id}`}
-        data-cy="TodoStatus"
-        type="checkbox"
-        className="todo__status"
-        checked={todo.completed}
-        disabled={isTemp}
-        onChange={() => onToggle(todo.id)}
-        readOnly
-      />
-      <label className="todo__status-label" htmlFor={`todo-${todo.id}`}>
-        <span className="visually-hidden">Toggle todo</span>
+    <div
+      data-cy="todo"
+      className={classNames('todo', { completed: todo.completed })}
+    >
+      <label className="todo__status-label">
+        <input
+          id={`todo-${todo.id}`}
+          data-cy="TodoStatus"
+          type="checkbox"
+          className="todo__status"
+          checked={todo.completed}
+          onChange={() => onToggle(todo.id)}
+          aria-label="Toggle todo"
+        />
       </label>
       <span data-cy="TodoTitle" className="todo__title">
         {todo.title}
